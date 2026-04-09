@@ -1,0 +1,205 @@
+/* ── Mini Timer Floating Widget ──────────────────────────────────────────────── *
+ * Appears on all pages (except /timer) when a study session is active.
+ * Styled to match the app's dark-mono design system.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+#miniTimer {
+  position: fixed;
+  bottom: 1.5rem;
+  right:  1.5rem;
+  width:  210px;
+  background: #13131a;
+  border: 1px solid #22222e;
+  border-radius: 18px;
+  padding: 0.85rem 1rem 0.95rem;
+  z-index: 9999;
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.6),
+    0  0   0  1px rgba(200,240,96,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+  font-family: "Azeret Mono", monospace;
+  color: #e8e6f0;
+  user-select: none;
+  cursor: default;
+
+  /* Entrance / exit */
+  opacity: 0;
+  transform: translateY(14px) scale(0.95);
+  transition: opacity 0.32s ease, transform 0.32s cubic-bezier(.34,1.56,.64,1);
+  --mt-accent: #c8f060;
+}
+
+#miniTimer.mt-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+#miniTimer.mt-exit {
+  opacity: 0;
+  transform: translateY(16px) scale(0.93);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Dragging state */
+#miniTimer.mt-dragging {
+  transition: none;
+  cursor: grabbing;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.75),
+    0  0   0  1px rgba(200,240,96,0.15);
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────────── */
+.mt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.65rem;
+  cursor: grab;
+}
+
+.mt-subject {
+  font-size: 0.63rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #55546a;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.mt-actions {
+  display: flex;
+  gap: 0.28rem;
+  align-items: center;
+}
+
+.mt-go,
+.mt-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1px solid #22222e;
+  background: transparent;
+  color: #55546a;
+  font-size: 0.68rem;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.mt-go:hover    { color: #e8e6f0; border-color: var(--mt-accent, #c8f060); }
+.mt-close:hover { color: #f06060; border-color: #f06060; }
+
+/* ── Body ────────────────────────────────────────────────────────────────────── */
+.mt-body {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+/* ── Ring ────────────────────────────────────────────────────────────────────── */
+.mt-ring-wrap {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  flex-shrink: 0;
+}
+
+.mt-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.mt-ring-bg {
+  fill: none;
+  stroke: #22222e;
+  stroke-width: 5;
+}
+
+.mt-ring-fg {
+  fill: none;
+  stroke: var(--mt-accent, #c8f060);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 213.63;   /* 2π × 34 */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.9s linear, stroke 0.35s;
+}
+
+.mt-ring-fg.mt-danger { stroke: #f06060 !important; }
+#miniTimer.mt-paused .mt-ring-fg { stroke: #55546a !important; }
+
+/* Countdown text overlaid on the ring */
+.mt-time {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  transition: color 0.3s;
+}
+
+.mt-time.mt-danger { color: #f06060; }
+
+/* ── Right side info ─────────────────────────────────────────────────────────── */
+.mt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  overflow: hidden;
+}
+
+.mt-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #35344a;
+}
+
+.mt-status {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--mt-accent, #c8f060);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s;
+}
+
+#miniTimer.mt-paused .mt-status { color: #55546a; }
+
+/* Pulse dot when running */
+.mt-pulse {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mt-accent, #c8f060);
+  margin-right: 4px;
+  vertical-align: middle;
+  animation: mtPulse 1.6s ease-in-out infinite;
+}
+
+#miniTimer.mt-paused .mt-pulse {
+  animation: none;
+  background: #55546a;
+}
+
+@keyframes mtPulse {
+  0%, 100% { opacity: 1;    transform: scale(1);    }
+  50%       { opacity: 0.4; transform: scale(0.65); }
+}

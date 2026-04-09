@@ -1,0 +1,217 @@
+/* ── Sidebar & Layout Variables ───────────────────────────────────────────── */
+:root {
+  --sidebar-bg: #13131a;
+  --sidebar-border: #22222e;
+  --sidebar-hover: rgba(255, 255, 255, 0.05);
+  --sidebar-active-bg: rgba(200, 240, 96, 0.1);
+  --sidebar-active-text: #c8f060;
+  --sidebar-text: #8e8d9c;
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 70px;
+  --sidebar-transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --app-bg: #0c0c0f;
+}
+
+/* Base reset to ensure layout works (avoids duplication if already in page css, but acts as a safety) */
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--app-bg);
+  overflow-x: hidden;
+}
+
+/* ── App Layout ──────────────────────────────────────────────────────────── */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+}
+
+/* ── Main Content Area ───────────────────────────────────────────────────── */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* allows flex children to shrink */
+  /* padding is handled by the individual pages now */
+}
+
+/* ── Global Sidebar ──────────────────────────────────────────────────────── */
+.global-sidebar {
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--sidebar-transition);
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.global-sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+
+.sidebar-header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  border-bottom: 1px solid var(--sidebar-border);
+  overflow: hidden;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--sidebar-active-text);
+  font-family: var(--serif, "Instrument Serif", Georgia, serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.brand-logo svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.global-sidebar.collapsed .brand-text {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--sidebar-text);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.toggle-btn:hover {
+  background: var(--sidebar-hover);
+  color: #fff;
+}
+
+.toggle-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform var(--sidebar-transition);
+}
+
+.global-sidebar.collapsed .toggle-icon {
+  transform: rotate(180deg);
+}
+
+.sidebar-nav {
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  text-decoration: none;
+  color: var(--sidebar-text);
+  border-radius: 8px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: var(--mono, "Azeret Mono", monospace);
+  font-size: 0.85rem;
+}
+
+.nav-item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.nav-item:hover {
+  background: var(--sidebar-hover);
+  color: #fff;
+}
+
+.nav-item.active {
+  background: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+  font-weight: bold;
+}
+
+.global-sidebar.collapsed .nav-text {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Mobile Overlay & Responsiveness ─────────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 90;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+@media (max-width: 768px) {
+  .global-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    width: var(--sidebar-width) !important; /* disabled collapse mode on mobile */
+  }
+
+  .global-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay.show {
+    display: block;
+    opacity: 1;
+  }
+}
+
+/* Quick override for the mobile hamburger button that we might add to pages later,
+   or if we just want a floating button. For now, we will add a floating target if on mobile */
+.mobile-nav-toggle {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--sidebar-active-text);
+  color: #000;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 80;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav-toggle {
+    display: flex;
+  }
+}

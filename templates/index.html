@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NoteKeeper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;800&family=DM+Mono:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header>
+    <div class="logo">📋 NoteKeeper</div>
+    <span class="tagline">a tiny Flask + SQLite app</span>
+  </header>
+
+  <!-- ── Add-note form ──────────────────────────────────────────────────── -->
+  <section class="card form-card">
+    <h2>New Note</h2>
+    <form action="/add" method="POST" id="noteForm">
+      <div class="field">
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text"
+               placeholder="Give your note a title…" required />
+      </div>
+      <div class="field">
+        <label for="content">Content</label>
+        <textarea id="content" name="content" rows="3"
+                  placeholder="Write something…" required></textarea>
+      </div>
+      <button type="submit">Add Note ➜</button>
+    </form>
+  </section>
+
+  <!-- ── Notes list ─────────────────────────────────────────────────────── -->
+  <section class="notes-section">
+    <h2>
+      Saved Notes
+      <span class="badge">{{ notes | length }}</span>
+    </h2>
+
+    {% if notes %}
+      <div class="notes-grid">
+        {% for note in notes %}
+          <article class="card note-card">
+            <div class="note-meta">{{ note["created_at"][:16] }}</div>
+            <h3>{{ note["title"] }}</h3>
+            <p>{{ note["content"] }}</p>
+            <a href="/delete/{{ note['id'] }}" class="delete-btn"
+               onclick="return confirm('Delete this note?')">✕ Delete</a>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <span>🗒️</span>
+        <p>No notes yet. Add one above!</p>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- ── Stack badge ────────────────────────────────────────────────────── -->
+  <footer>
+    <span class="pill">Python</span>
+    <span class="pill">Flask</span>
+    <span class="pill">SQLite</span>
+    <span class="pill">HTML / CSS / JS</span>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

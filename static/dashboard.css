@@ -1,0 +1,466 @@
+/* ── Reset ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0c0c0f;
+  --surface:   #13131a;
+  --border:    #22222e;
+  --text:      #e8e6f0;
+  --muted:     #55546a;
+  --accent:    #c8f060;      /* electric lime */
+  --cyan:      #40c8f0;
+  --purple:    #a78bfa;
+  --fire:      #f97316;
+  --danger:    #f06060;
+  --radius:    14px;
+  --mono:      "Azeret Mono", monospace;
+  --serif:     "Instrument Serif", Georgia, serif;
+}
+
+body {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 20%  0%, rgba(200,240, 96,.04) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 90%, rgba( 64,200,240,.03) 0%, transparent 70%);
+}
+
+/* ── Dashboard container ──────────────────────────────────────────────────── */
+.dashboard {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* ── Hero stat cards ──────────────────────────────────────────────────────── */
+.hero-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.25rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+  animation: cardIn 0.5s ease both;
+  transition: border-color 0.3s, transform 0.2s;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
+  opacity: 0.8;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,.1);
+}
+
+/* Individual card accents */
+.stat-card--primary::before { background: var(--accent); }
+.stat-card--cyan::before    { background: var(--cyan); }
+.stat-card--purple::before  { background: var(--purple); }
+.stat-card--fire::before    { background: var(--fire); }
+
+.stat-card--primary .stat-icon { color: var(--accent); }
+.stat-card--cyan    .stat-icon { color: var(--cyan); }
+.stat-card--purple  .stat-icon { color: var(--purple); }
+.stat-card--fire    .stat-icon { color: var(--fire); }
+
+.stat-card--primary .stat-value { color: var(--accent); }
+.stat-card--cyan    .stat-value { color: var(--cyan); }
+.stat-card--purple  .stat-value { color: var(--purple); }
+.stat-card--fire    .stat-value { color: var(--fire); }
+
+/* Staggered animation delays */
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.12s; }
+.stat-card:nth-child(3) { animation-delay: 0.19s; }
+.stat-card:nth-child(4) { animation-delay: 0.26s; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.stat-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.04);
+  border-radius: 10px;
+}
+
+.stat-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.stat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.stat-sub {
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* ── Week chart ──────────────────────────────────────────────────────────── */
+.week-section {
+  animation: cardIn 0.5s ease 0.3s both;
+}
+
+.week-section h2,
+.top-subject-section h2,
+.breakdown h2,
+.charts-section h2 {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.week-chart {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+  height: 160px;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* ── Charts section ──────────────────────────────────────────────────────── */
+.charts-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  animation: cardIn 0.5s ease 0.32s both;
+}
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.chart-card:hover {
+  border-color: rgba(255,255,255,.08);
+  transform: translateY(-2px);
+}
+
+.chart-card--wide {
+  grid-column: 1 / -1;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.chart-header h2 {
+  margin-bottom: 0;
+}
+
+.chart-badge {
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.chart-wrap {
+  position: relative;
+  height: 220px;
+}
+
+.chart-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-wrap--subjects {
+  height: 180px;
+}
+
+.week-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+.week-bar-track {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.week-bar {
+  width: 100%;
+  max-width: 42px;
+  min-height: 4px;
+  background: linear-gradient(180deg, var(--accent), rgba(200,240,96,.4));
+  border-radius: 6px 6px 2px 2px;
+  position: relative;
+  transition: height 0.6s cubic-bezier(.34,1.56,.64,1);
+}
+
+.week-bar:hover {
+  filter: brightness(1.2);
+}
+
+.bar-tooltip {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.62rem;
+  color: var(--accent);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.week-bar:hover .bar-tooltip {
+  opacity: 1;
+}
+
+.week-day-label {
+  font-size: 0.6rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+/* ── Top subject today ───────────────────────────────────────────────────── */
+.top-subject-section {
+  animation: cardIn 0.5s ease 0.35s both;
+}
+
+.top-subject-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border-left: 4px solid var(--accent);
+  transition: transform 0.2s;
+}
+
+.top-subject-card:hover {
+  transform: translateY(-2px);
+}
+
+.top-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  box-shadow: 0 0 12px var(--accent);
+}
+
+.top-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.top-info strong {
+  font-size: 0.95rem;
+}
+
+.top-info span {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+/* ── Subject breakdown ───────────────────────────────────────────────────── */
+.breakdown {
+  animation: cardIn 0.5s ease 0.4s both;
+}
+
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.85rem;
+}
+
+.breakdown-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.15rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.breakdown-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.bc-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.bc-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.bc-name {
+  font-size: 0.88rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bc-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.bc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.bc-num {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.3px;
+}
+
+.bc-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bc-bar-wrap {
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.bc-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ── Total banner ────────────────────────────────────────────────────────── */
+.total-banner {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--muted);
+  padding: 1.25rem;
+  border-top: 1px solid var(--border);
+  letter-spacing: 0.04em;
+  animation: cardIn 0.5s ease 0.45s both;
+}
+
+.total-banner strong {
+  color: var(--accent);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.empty-state a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.empty-state a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+  .dashboard { padding: 1.5rem 1rem 3rem; }
+  .hero-cards { grid-template-columns: 1fr 1fr; }
+  .week-chart { height: 120px; padding: 1rem; }
+  .charts-section { grid-template-columns: 1fr; }
+  .chart-wrap { height: 180px; }
+  nav { padding: 0.75rem 1rem; }
+}
+
+@media (max-width: 440px) {
+  .hero-cards { grid-template-columns: 1fr; }
+  .breakdown-grid { grid-template-columns: 1fr; }
+}

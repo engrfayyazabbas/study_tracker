@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Study Tracker{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@200;400;700&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=Fraunces:wght@300;700&display=swap" rel="stylesheet"/>
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}"/>
+  {% block styles %}{% endblock %}
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- ── Global Sidebar ─────────────────────────────────────────────────── -->
+    <aside class="global-sidebar" id="globalSidebar">
+      <div class="sidebar-header">
+        <a href="/" class="brand-logo" title="Study Tracker">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          <span class="brand-text">Tracker</span>
+        </a>
+        <button class="toggle-btn" id="sidebarToggle" title="Toggle Sidebar">
+          <svg viewBox="0 0 24 24" fill="none" class="toggle-icon" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- Dashboard -->
+        <a href="/dashboard" class="nav-item {{ 'active' if request.path == '/dashboard' else '' }}" title="Dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span class="nav-text">Dashboard</span>
+        </a>
+
+        <!-- Timer -->
+        <a href="/timer" class="nav-item {{ 'active' if request.path == '/timer' else '' }}" title="Timer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span class="nav-text">Timer</span>
+        </a>
+
+        <!-- Subjects -->
+        <a href="/" class="nav-item {{ 'active' if request.path == '/' else '' }}" title="Subjects">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span class="nav-text">Subjects</span>
+        </a>
+
+        <!-- Sessions -->
+        <a href="/sessions" class="nav-item {{ 'active' if request.path == '/sessions' else '' }}" title="Sessions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+          <span class="nav-text">Sessions</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- ── Main Content ─────────────────────────────────────────────────────── -->
+    <main class="app-main">
+      {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Mobile overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  </div>
+
+  <script src="{{ url_for('static', filename='sidebar.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

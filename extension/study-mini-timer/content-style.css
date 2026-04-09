@@ -1,0 +1,170 @@
+#extMiniTimer {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 214px;
+  z-index: 2147483647;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  background: #13131a;
+  color: #e8e6f0;
+  border: 1px solid #2a2a35;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  --emt-accent: #c8f060;
+}
+
+#extMiniTimer .emt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+#extMiniTimer .emt-subject {
+  font-size: 11px;
+  color: #8f8ea7;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#extMiniTimer .emt-actions {
+  display: flex;
+  gap: 6px;
+}
+
+#extMiniTimer .emt-go,
+#extMiniTimer .emt-close {
+  height: 22px;
+  min-width: 30px;
+  border: 1px solid #2a2a35;
+  border-radius: 6px;
+  background: transparent;
+  color: #d9d8e5;
+  font-size: 11px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#extMiniTimer .emt-close {
+  padding: 0 8px;
+}
+
+#extMiniTimer .emt-go:hover,
+#extMiniTimer .emt-close:hover {
+  border-color: var(--emt-accent);
+}
+
+#extMiniTimer .emt-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#extMiniTimer .emt-ring-wrap {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  flex-shrink: 0;
+}
+
+#extMiniTimer .emt-ring {
+  width: 68px;
+  height: 68px;
+  transform: rotate(-90deg);
+}
+
+#extMiniTimer .emt-ring-bg {
+  fill: none;
+  stroke: #2a2a35;
+  stroke-width: 5;
+}
+
+#extMiniTimer .emt-ring-fg {
+  fill: none;
+  stroke: var(--emt-accent);
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.9s linear;
+}
+
+#extMiniTimer .emt-time {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+#extMiniTimer .emt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#extMiniTimer .emt-label {
+  font-size: 10px;
+  color: #8f8ea7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+#extMiniTimer .emt-status {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--emt-accent);
+}
+
+#extMiniTimer .emt-pulse {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--emt-accent);
+  margin-right: 4px;
+  vertical-align: middle;
+  animation: emtPulse 1.3s ease-in-out infinite;
+}
+
+#extMiniTimer.emt-paused .emt-status {
+  color: #8f8ea7;
+}
+
+#extMiniTimer.emt-paused .emt-pulse {
+  animation: none;
+  background: #8f8ea7;
+}
+
+#extMiniTimer .emt-danger {
+  color: #f56a6a;
+  stroke: #f56a6a;
+}
+
+@keyframes emtPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.65);
+  }
+}
+
+
+#extMiniTimer .emt-header {
+  cursor: grab;
+}
+
+#extMiniTimer.emt-dragging {
+  cursor: grabbing;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.62);
+}
