@@ -412,7 +412,22 @@ function saveSession(completed) {
   };
 
   persistSessionToStorage(session);
-  setStatus(`Saved locally - ${duration} min of ${session.subject_name}`, "ok");
+  
+  fetch('/sessions/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      subject_id: subjectId,
+      start_time: startIso,
+      end_time: endTime.toISOString(),
+      duration: duration,
+      notes: notes
+    })
+  }).catch(err => console.error("Error saving session to server:", err));
+
+  setStatus(`Saved locally and to server - ${duration} min of ${session.subject_name}`, "ok");
   addLogItem(session);
   bumpGoalBar(duration);
 
