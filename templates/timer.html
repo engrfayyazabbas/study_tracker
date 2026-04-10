@@ -115,12 +115,14 @@
         <ul class="session-log" id="sessionLog">
           {% if sessions %}
             {% for s in sessions %}
-              <li class="log-item" style="--dot:{{ s['color'] }}">
+              <li class="log-item" style="--dot:{{ s['color'] }}" data-id="{{ s['id'] }}">
                 <span class="log-dot"></span>
                 <div class="log-info">
                   <strong>{{ s['subject_name'] }}</strong>
                   <span>{{ s['duration'] }} min · {{ s['start_time'][11:16] }} – {{ s['end_time'][11:16] }}</span>
                 </div>
+                <button class="s-delete log-delete" title="Delete session"
+                        onclick="deleteSession({{ s['id'] }}, this)">✕</button>
               </li>
             {% endfor %}
           {% else %}

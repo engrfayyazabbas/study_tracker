@@ -28,7 +28,6 @@ const CIRCUMFERENCE   = 2 * Math.PI * 116;
 const STOPWATCH_CAP   = 7200;
 const GOAL_KEY        = "studyGoalMinutes";
 const MINI_STORE_KEY  = "studyTimerState";
-const SESSION_STORE_KEY = "studySessionsByDay";
 
 ring.style.strokeDasharray  = CIRCUMFERENCE;
 ring.style.strokeDashoffset = 0;
@@ -72,39 +71,43 @@ function todayKey() {
   return `${y}-${m}-${d}`;
 }
 
-function readSessionStore() {
-  try {
-    const raw = localStorage.getItem(SESSION_STORE_KEY);
-    const parsed = raw ? JSON.parse(raw) : {};
-    return parsed && typeof parsed === "object" ? parsed : {};
-  } catch {
-    return {};
-  }
-}
-
-function writeSessionStore(store) {
-  localStorage.setItem(SESSION_STORE_KEY, JSON.stringify(store));
-}
-
-function getTodaySessionsFromStorage() {
-  const store = readSessionStore();
-  const sessions = store[todayKey()];
-  return Array.isArray(sessions) ? sessions : [];
-}
-
-function persistSessionToStorage(session) {
-  const store = readSessionStore();
-  const key = todayKey();
-  const sessions = Array.isArray(store[key]) ? store[key] : [];
-  sessions.push(session);
-  store[key] = sessions;
-  writeSessionStore(store);
-}
 
 function setLogTotal(totalMinutes) {
   const match = logTotal ? logTotal.querySelector("strong") : null;
   if (match) {
     match.textContent = `${totalMinutes} min`;
+  }
+}
+
+async function deleteSession(id, btn) {
+  if (!confirm("Delete this session?")) return;
+
+  const item = btn.closest(".log-item");
+  if (!item) return;
+
+  try {
+    const res  = await fetch(`/api/sessions/`, { method: "DELETE" });
+    const data = await res.json();
+
+    if (data.ok) {
+      item.remove();
+      let newTotal = 0;
+      document.querySelectorAll(".log-item .log-info span").forEach(span => {
+        const match = span.textContent.match(/(\d+)\s+min/);
+        if (match) newTotal += parseInt(match[1], 10);
+      });
+      setLogTotal(newTotal);
+      bumpGoalBar();
+      
+      const sessionLog = document.getElementById("sessionLog");
+      if (sessionLog && sessionLog.children.length === 0) {
+        sessionLog.innerHTML = '<li class="log-empty" id="logEmpty">No sessions yet today.</li>';
+      }
+    } else {
+      alert("Could not delete: " + (data.error || "unknown error"));
+    }
+  } catch (err) {
+    alert("Network error — could not delete session.");
   }
 }
 
@@ -115,42 +118,17 @@ function createLogItemEl(session) {
   const end = (session.end_time || "").substring(11, 16);
   li.className = "log-item";
   li.style.setProperty("--dot", color);
+  if (session.id) li.dataset.id = session.id;
   li.innerHTML = `
     <span class="log-dot"></span>
     <div class="log-info">
-      <strong>${session.subject_name || "Unknown"}</strong>
-      <span>${session.duration || 0} min � ${start} - ${end}</span>
-    </div>`;
+      <strong></strong>
+      <span> min ·  - </span>
+    </div>
+    <button class="s-delete log-delete" title="Delete session" onclick="deleteSession(, this)">✕</button>`;
   return li;
 }
 
-function hydrateTodayLogFromStorage() {
-  if (!sessionLog) return;
-  const sessions = getTodaySessionsFromStorage();
-  sessionLog.innerHTML = "";
-
-  if (!sessions.length) {
-    const empty = document.createElement("li");
-    empty.className = "log-empty";
-    empty.id = "logEmpty";
-    empty.textContent = "No sessions yet today.";
-    sessionLog.appendChild(empty);
-    setLogTotal(0);
-    return;
-  }
-
-  let total = 0;
-  sessions.forEach(session => {
-    total += parseInt(session.duration, 10) || 0;
-  });
-
-  sessions.slice().reverse().forEach(session => {
-    sessionLog.appendChild(createLogItemEl(session));
-  });
-
-  setLogTotal(total);
-  renderGoalBar(total);
-}
 
 function fmt(secs) {
   const h = Math.floor(secs / 3600);
@@ -389,7 +367,7 @@ function resetState() {
   updateDisplay();
 }
 
-function saveSession(completed) {
+async function saveSession(completed) {
   const endTime   = new Date();
   const subjectId = subjectSelect.value;
   const notes     = notesInput.value.trim();
@@ -400,36 +378,34 @@ function saveSession(completed) {
     ? sessionStartTime.toISOString()
     : new Date(endTime.getTime() - duration * 60 * 1000).toISOString();
 
-  const session = {
-    subject_id: subjectId,
-    subject_name: opt && opt.value ? opt.text.trim() : "Unknown",
-    color: opt && opt.value ? (opt.dataset.color || "#888") : "#888",
-    start_time: startIso,
-    end_time: endTime.toISOString(),
-    duration,
-    notes,
-    completed
-  };
-
-  persistSessionToStorage(session);
-  
-  fetch('/sessions/add', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      subject_id: subjectId,
-      start_time: startIso,
-      end_time: endTime.toISOString(),
-      duration: duration,
-      notes: notes
-    })
-  }).catch(err => console.error("Error saving session to server:", err));
-
-  setStatus(`Saved locally and to server - ${duration} min of ${session.subject_name}`, "ok");
-  addLogItem(session);
-  bumpGoalBar(duration);
+  try {
+    const res = await fetch('/sessions/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        subject_id: subjectId,
+        start_time: startIso,
+        end_time: endTime.toISOString(),
+        duration: duration,
+        notes: notes
+      })
+    });
+    const data = await res.json();
+    
+    if (data.ok) {
+      setStatus(`Saved to server -  min of `, "ok");
+      addLogItem(data.session);
+      bumpGoalBar();
+    } else {
+      console.error("Server error:", data.error);
+      setStatus("Error saving session", "danger");
+    }
+  } catch (err) {
+    console.error("Network error saving session to server:", err);
+    setStatus("Network error saving session", "danger");
+  }
 
   resetState();
   notesInput.value = "";
@@ -535,7 +511,6 @@ document.addEventListener("keydown", e => {
 
 updateDisplay();
 (() => {
-  hydrateTodayLogFromStorage();
   const match   = logTotal ? logTotal.querySelector("strong") : null;
   const current = match ? (parseInt(match.textContent, 10) || 0) : 0;
   renderGoalBar(current);

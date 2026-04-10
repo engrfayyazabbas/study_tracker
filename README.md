@@ -16,7 +16,7 @@
 - SVG ring progress indicator with real-time countdown display
 - Subject selection and optional session notes
 - Automatic session saving when the timer is stopped
-- Today's session log with per-session duration and time range
+- Today's session log with inline deletion, duration, and time range
 
 ### 📋 Sessions History (`/sessions`)
 - All sessions grouped by date with expandable day sections

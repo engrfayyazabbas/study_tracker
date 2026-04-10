@@ -305,7 +305,32 @@ select option { background: var(--surface); }
   border-radius: 8px;
   border: 1px solid var(--border);
   animation: popIn 0.3s ease both;
+  transition: opacity 0.25s, transform 0.25s;
 }
+
+.log-item.removing {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.log-item .s-delete {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.7rem;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 4px;
+  transition: 0.2s;
+  line-height: 1;
+}
+
+.log-item .s-delete:hover {
+  color: var(--danger);
+  background: #2a1313;
+}
+
 
 @keyframes popIn {
   from { opacity: 0; transform: translateY(6px); }
