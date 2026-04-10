@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Study Mini Timer Overlay",
+  "version": "1.0.0",
+  "description": "Shows your study mini timer on all browser tabs.",
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"],
+      "css": ["content-style.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Sessions · Study Tracker{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='timer.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='sessions.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='mini-timer.css') }}"/>
+{% endblock %}
+
+{% block content %}
+  <div class="sessions-page">
+
+    <!-- ── Stats strip ──────────────────────────────────────────────────── -->
+    <section class="stats-strip">
+      {% for s in stats %}
+        <div class="stat-card" style="--accent: {{ s['color'] }}">
+          <span class="stat-dot"></span>
+          <div class="stat-info">
+            <strong>{{ s['name'] }}</strong>
+            <span>{{ s['total_minutes'] }} min · {{ s['session_count'] }} sessions</span>
+          </div>
+          <div class="stat-bar-wrap">
+            <div class="stat-bar"
+                 style="width: {{ [((s['total_minutes'] / total_all * 100) if total_all else 0)|round|int, 2]|max }}%">
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <p class="no-stats">No sessions recorded yet. <a href="/timer">Start studying →</a></p>
+      {% endfor %}
+    </section>
+
+    <!-- ── All-time total ────────────────────────────────────────────────── -->
+    <div class="total-banner">
+      Total study time: <strong>{{ total_all }} min
+      ({{ (total_all // 60) }}h {{ (total_all % 60) }}m)</strong>
+    </div>
+
+    <!-- ── Sessions by date ──────────────────────────────────────────────── -->
+    <section class="history">
+      {% if by_date %}
+        {% for day, day_sessions in by_date.items() %}
+          <div class="day-group">
+            <div class="day-header">
+              <span class="day-label">{{ day }}</span>
+              <span class="day-total">
+                {{ day_sessions | sum(attribute='duration') }} min
+              </span>
+            </div>
+
+            <ul class="session-list">
+              {% for s in day_sessions %}
+                <li class="session-item" style="--dot: {{ s['color'] }}"
+                    data-id="{{ s['id'] }}">
+                  <span class="s-dot"></span>
+                  <span class="s-subject">{{ s['subject_name'] }}</span>
+                  <span class="s-time">
+                    {{ s['start_time'][11:16] }} – {{ s['end_time'][11:16] }}
+                  </span>
+                  <span class="s-duration">{{ s['duration'] }} min</span>
+                  {% if s['notes'] %}
+                    <span class="s-notes" title="{{ s['notes'] }}">📝</span>
+                  {% endif %}
+                  <button class="s-delete" title="Delete session"
+                          onclick="deleteSession({{ s['id'] }}, this)">✕</button>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-history">
+          <p>No sessions yet.<br/><a href="/timer">Start your first session →</a></p>
+        </div>
+      {% endif %}
+    </section>
+
+  </div>
+
+  <!-- API reference box -->
+  <div class="api-box">
+    <h4>JSON API</h4>
+    <code>GET  /api/sessions</code>
+    <code>GET  /api/sessions?subject_id=1</code>
+    <code>GET  /api/sessions?date=2024-06-01</code>
+    <code>GET  /api/sessions/&lt;id&gt;</code>
+    <code>POST /sessions/add</code>
+    <code>DELETE /api/sessions/&lt;id&gt;</code>
+  </div>
+
+{% endblock %}
+{% block scripts %}
+  <script src="{{ url_for('static', filename='sessions.js') }}"></script>
+  <script src="{{ url_for('static', filename='mini-timer.js') }}"></script>
+{% endblock %}

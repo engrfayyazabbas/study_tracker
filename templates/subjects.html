@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Subjects · Study Tracker{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='subjects.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='mini-timer.css') }}"/>
+{% endblock %}
+
+{% block content %}
+  <div class="subjects-layout">
+
+    <!-- ── Sidebar: Add / Edit form ───────────────────────────────────────── -->
+    <aside class="subjects-sidebar">
+      <div class="brand">Study<br/>Tracker</div>
+
+      <form id="subjectForm" action="/subjects/add" method="POST">
+        <input type="hidden" name="_method" id="formMethod" value="add"/>
+        <input type="hidden" name="subject_id" id="formSubjectId" value=""/>
+
+        <h2 id="formTitle">New Subject</h2>
+
+        <label for="name">Subject name</label>
+        <input id="name" name="name" type="text"
+               placeholder="e.g. Mathematics" required autocomplete="off"/>
+
+        <label for="color">Color</label>
+        <div class="color-row">
+          <input id="color" name="color" type="color" value="#4A90D9"/>
+          <div class="swatches">
+            {% for c in ["#e74c3c","#e67e22","#f1c40f","#2ecc71","#1abc9c","#3498db","#9b59b6","#e91e8c"] %}
+              <button type="button" class="swatch" style="background:{{c}}"
+                      data-color="{{c}}" title="{{c}}"></button>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="submitBtn">Add Subject</button>
+          <button type="button" id="cancelBtn" class="hidden">Cancel</button>
+        </div>
+      </form>
+
+      <div class="sidebar-footer">
+        <span class="pill">Flask</span>
+        <span class="pill">SQLite</span>
+        <span class="pill">Python</span>
+      </div>
+    </aside>
+
+    <!-- ── Main: Subject list ─────────────────────────────────────────────── -->
+    <main class="main">
+      <header class="main-header">
+        <h1>Subjects</h1>
+        <span class="count">{{ subjects|length }} total</span>
+      </header>
+
+      {% if subjects %}
+        <ul class="subject-list">
+          {% for s in subjects %}
+            <li class="subject-row" style="--accent: {{ s['color'] }}"
+                data-id="{{ s['id'] }}"
+                data-name="{{ s['name'] }}"
+                data-color="{{ s['color'] }}">
+
+              <span class="dot"></span>
+
+              <span class="subject-name">{{ s['name'] }}</span>
+
+              <span class="subject-date">
+                {{ s['created_at'][:10] }}
+              </span>
+
+              <div class="row-actions">
+                <!-- Edit -->
+                <button class="icon-btn edit-btn" title="Edit">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M13.5 3.5l3 3L7 16H4v-3L13.5 3.5z"/>
+                  </svg>
+                </button>
+
+                <!-- Delete -->
+                <form action="/subjects/{{ s['id'] }}/delete" method="POST"
+                      class="delete-form"
+                      onsubmit="return confirm('Delete «{{ s['name'] }}»? All sessions will be removed.')">
+                  <button type="submit" class="icon-btn delete-btn" title="Delete">
+                    <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons/icons/trash3-fill.svg"
+     width="14" height="14"
+     style="filter: invert(40%); display:block;"/>
+                  </button>
+                </form>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+
+      {% else %}
+        <div class="empty">
+          <div class="empty-icon">📚</div>
+          <p>No subjects yet.<br/>Add your first one →</p>
+        </div>
+      {% endif %}
+    </main>
+
+  </div><!-- /.subjects-layout -->
+
+  <!-- Hidden edit-proxy form (posts to /subjects/<id>/edit) -->
+  <form id="editProxy" method="POST" style="display:none">
+    <input name="name"  id="proxyName"/>
+    <input name="color" id="proxyColor"/>
+  </form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='subjects.js') }}"></script>
+  <script src="{{ url_for('static', filename='mini-timer.js') }}"></script>
+{% endblock %}
