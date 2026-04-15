@@ -55,36 +55,13 @@
 
 ```
 files/
-│
-├── app.py                  # Flask application — all routes & API endpoints
-├── database.py             # SQLite helper: connection factory & schema init
-├── schema.sql              # Full database schema (tables, indexes, triggers, views)
-├── requirements.txt        # Python dependencies (Flask)
-├── README.md               # ← You are here
-│
-├── study_tracker.db        # SQLite database (auto-created on first run)
-├── notes.db                # Legacy database file (can be removed)
-│
-├── templates/              # Jinja2 HTML templates
-│   ├── subjects.html       #   → Subjects management page (home "/")
-│   ├── timer.html          #   → Study timer page ("/timer")
-│   ├── sessions.html       #   → Session history & stats ("/sessions")
-│   ├── dashboard.html      #   → Dashboard with stats & Chart.js ("/dashboard")
-│   └── index.html          #   → Original / base template
-│
-├── static/                 # Static assets served by Flask
-│   ├── style.css           #   → Global / shared styles
-│   ├── script.js           #   → Global JS utilities
-│   ├── subjects.css        #   → Styles for subjects page
-│   ├── subjects.js         #   → JS for subjects CRUD operations
-│   ├── timer.css           #   → Styles for timer page
-│   ├── timer.js            #   → Timer logic (start/stop/save session)
-│   ├── sessions.css        #   → Styles for sessions history page
-│   ├── sessions.js         #   → JS for sessions page (filtering, delete)
-│   ├── dashboard.css       #   → Styles for dashboard (cards, charts, layout)
-│   └── dashboard.js        #   → Chart.js rendering + micro-interactions
-│
-└── __pycache__/            # Python bytecode cache (auto-generated)
+├── app.py             # Main Flask application
+├── database.py        # Database connection & init helper
+├── schema.sql         # Database schema
+├── requirements.txt   # Python dependencies
+├── study_tracker.db   # SQLite database (auto-created)
+├── templates/         # HTML Jinja2 templates (Bento Grid layout)
+└── static/            # CSS styles and Vanilla JS
 ```
 
 ---
@@ -107,77 +84,7 @@ python app.py
 # → http://127.0.0.1:5000
 ```
 
----
-
-## 🔗 API Endpoints
-
-### Pages (HTML)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/` | Subjects management page |
-| `GET` | `/timer` | Study timer page |
-| `GET` | `/sessions` | Session history page |
-| `GET` | `/dashboard` | Dashboard with stats & charts |
-
-### REST API (JSON)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/subjects/add` | Add a new subject |
-| `GET` | `/subjects/<id>` | Get subject details (for edit prefill) |
-| `POST` | `/subjects/<id>/edit` | Update a subject |
-| `POST` | `/subjects/<id>/delete` | Delete a subject (cascades to sessions) |
-| `POST` | `/sessions/add` | Save a study session |
-| `GET` | `/api/sessions` | List sessions (filterable: `?subject_id=`, `?date=`) |
-| `GET` | `/api/sessions/<id>` | Get a single session |
-| `DELETE` | `/api/sessions/<id>` | Delete a session |
-| `GET` | `/api/dashboard/charts` | Aggregated chart data (daily, weekly, per-subject) |
-
----
-
-## 🗄 Database Schema
-
-```
-┌──────────────────────────┐       ┌──────────────────────────────┐
-│        subjects           │       │          sessions             │
-├──────────────────────────┤       ├──────────────────────────────┤
-│ id         INTEGER PK     │◄──┐  │ id          INTEGER PK        │
-│ name       TEXT UNIQUE     │   │  │ subject_id  INTEGER FK ───────┘
-│ color      TEXT (#rrggbb)  │   │  │ start_time  DATETIME          │
-│ created_at DATETIME        │   │  │ end_time    DATETIME          │
-└──────────────────────────┘   │  │ date        DATE              │
-                                │  │ duration    INTEGER (minutes) │
-                                │  │ notes       TEXT              │
-                                │  │ created_at  DATETIME          │
-                                │  └──────────────────────────────┘
-                                │
-                                └── ON DELETE CASCADE
-```
-
-**Additional schema features** (defined in `schema.sql`):
-- Performance indexes on `subject_id`, `date`, and `start_time`
-- Overlap-prevention trigger per subject per day
-- `daily_summary` view — daily totals per subject
-- `subject_totals` view — all-time totals per subject
-
----
-
-## 📝 Development Log
-
-### Work Completed
-
-| # | Feature | Files Changed | Description |
-|---|---------|---------------|-------------|
-| 1 | **Subjects CRUD** | `app.py`, `subjects.html`, `subjects.css`, `subjects.js` | Full create/read/update/delete for study subjects with color pickers and sidebar form |
-| 2 | **Study Timer** | `app.py`, `timer.html`, `timer.css`, `timer.js` | Pomodoro-style timer with SVG ring progress, mode pills (25/50/custom), session saving via fetch API |
-| 3 | **Session History** | `app.py`, `sessions.html`, `sessions.css`, `sessions.js` | Sessions grouped by date, per-subject stat cards with progress bars, inline delete |
-| 4 | **Sessions REST API** | `app.py` | Full JSON API: `GET /api/sessions` (filterable), `GET /api/sessions/<id>`, `DELETE /api/sessions/<id>` |
-| 5 | **Dashboard — Stats & Cards** | `app.py`, `dashboard.html`, `dashboard.css`, `dashboard.js` | Dashboard page with 4 hero stat cards (today's time, session count, daily average, streak), 7-day CSS bar chart, top subject highlight, per-subject breakdown grid |
-| 6 | **Dashboard — Chart.js Charts** | `app.py`, `dashboard.html`, `dashboard.css`, `dashboard.js` | Added `/api/dashboard/charts` API endpoint + 3 Chart.js charts: daily line chart (30 days), weekly bar chart (12 weeks), subject-wise horizontal bar (all-time) with custom dark-theme tooltips and gradient fills |
-| 7 | **Cross-page Navigation** | `timer.html`, `sessions.html`, `timer.css` | Added 📊 Dashboard links to timer and sessions page navbars |
-
-### Design Decisions
+## 🎨 Design Decisions
 
 - **Premium Modern Aesthetic** — Rebuilt the layout using a deeply immersive **Deep Space Dark Theme** (`#09090b` baseline) enhanced by soft glassmorphism components (`rgba(255,255,255,0.03)` with `backdrop-filter: blur(16px)`).
 - **Global Bento Grid Structure** — All pages (Dashboard, Timer, Sessions, Subjects) adhere to a clean, scalable Bento grid wrapper that naturally adapts to any screen size.
