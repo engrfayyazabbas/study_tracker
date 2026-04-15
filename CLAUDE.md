@@ -80,12 +80,12 @@ study_tracker.db→ SQLite database file
 ## 4. Templates (`templates/`)
 
 All extend **`base.html`** which provides:
-- Sidebar navigation (collapsible, state saved in `localStorage`)
+- Global top header navigation (sticky, glassmorphism) with mobile dropdown.
 - `{% block title %}`, `{% block styles %}`, `{% block content %}`, `{% block scripts %}`
 
 | Template         | Page        | Loads these static files                          |
 |------------------|-------------|---------------------------------------------------|
-| `base.html`      | (layout)    | `style.css`, `sidebar.css`, `sidebar.js`          |
+| `base.html`      | (layout)    | `style.css`, `header.css`, `header.js`            |
 | `subjects.html`  | Subjects    | `subjects.css`, `subjects.js`                     |
 | `timer.html`     | Timer       | `timer.css`, `timer.js`, `mini-timer.css`, `mini-timer.js` |
 | `sessions.html`  | Sessions    | `timer.css`, `sessions.css`, `sessions.js`, `mini-timer.css`, `mini-timer.js` |
@@ -98,8 +98,8 @@ All extend **`base.html`** which provides:
 ### CSS
 | File            | Purpose                                                      |
 |-----------------|--------------------------------------------------------------|
-| `style.css`     | Global reset, CSS variables (dark theme tokens)              |
-| `sidebar.css`   | Collapsible sidebar layout                                   |
+| `style.css`     | Global reset, CSS variables (dark theme tokens), app container layout |
+| `header.css`    | Horizontal top navigation bar + mobile dropdown              |
 | `timer.css`     | Timer page + shared CSS vars used by sessions.css too        |
 | `sessions.css`  | Sessions page, stats strip, history list, modal styles       |
 | `subjects.css`  | Subject cards, add/edit form                                 |
@@ -121,7 +121,7 @@ All extend **`base.html`** which provides:
 ### JavaScript
 | File            | Purpose                                                                 |
 |-----------------|-------------------------------------------------------------------------|
-| `sidebar.js`    | Toggle sidebar open/closed, persist state in `localStorage`             |
+| `header.js`     | Toggle mobile dropdown menu logic                                       |
 | `timer.js`      | Stopwatch logic, subject select, POST to `/sessions/add`, today list    |
 | `sessions.js`   | Delete session (DELETE API), manual-session modal (POST `/api/sessions/manual`), live DOM inject |
 | `subjects.js`   | Inline edit/delete subject cards                                         |
@@ -176,7 +176,7 @@ When adding a new **page**:
 - [ ] Create `templates/<name>.html` extending `base.html`
 - [ ] Add `<name>.css` and `<name>.js` in `static/`
 - [ ] Link them in the template's `{% block styles %}` / `{% block scripts %}`
-- [ ] Add sidebar link in `base.html`
+- [ ] Ensure `<nav>` link is added to `base.html` tracking `request.path`
 
 When adding a new **API endpoint**:
 - [ ] Add route in `app.py` returning `jsonify(...)`
