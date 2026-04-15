@@ -9,6 +9,61 @@
 {% endblock %}
 
 {% block content %}
+  <!-- ── Manual session modal ───────────────────────────────────────────── -->
+  <div id="manualModal" class="modal-backdrop" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Manual Session</h2>
+        <button class="modal-close" id="modalCloseBtn" aria-label="Close">✕</button>
+      </div>
+
+      <form id="manualSessionForm" class="modal-body" novalidate>
+        <!-- Subject -->
+        <div class="field-group">
+          <label for="msSubject">Subject</label>
+          <select id="msSubject" required>
+            <option value="" disabled selected>— choose a subject —</option>
+            {% for sub in subjects %}
+              <option value="{{ sub['id'] }}" data-color="{{ sub['color'] }}">{{ sub['name'] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Date -->
+        <div class="field-group">
+          <label for="msDate">Date</label>
+          <input type="date" id="msDate" required />
+        </div>
+
+        <!-- Start time -->
+        <div class="field-group">
+          <label for="msStart">Start Time</label>
+          <input type="time" id="msStart" required />
+        </div>
+
+        <!-- Duration -->
+        <div class="field-group">
+          <label for="msDuration">Duration (minutes)</label>
+          <input type="number" id="msDuration" min="1" max="720" placeholder="e.g. 45" required />
+        </div>
+
+        <!-- Notes (optional) -->
+        <div class="field-group">
+          <label for="msNotes">Notes <span class="optional">(optional)</span></label>
+          <input type="text" id="msNotes" placeholder="e.g. Chapter 3 revision" maxlength="200" />
+        </div>
+
+        <!-- Error -->
+        <p id="msError" class="ms-error" hidden></p>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" id="modalCancelBtn">Cancel</button>
+          <button type="submit" class="btn-primary" id="msSaveBtn">Save Session</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="sessions-page">
 
     <!-- ── Stats strip ──────────────────────────────────────────────────── -->
@@ -31,10 +86,13 @@
       {% endfor %}
     </section>
 
-    <!-- ── All-time total ────────────────────────────────────────────────── -->
-    <div class="total-banner">
-      Total study time: <strong>{{ total_all }} min
-      ({{ (total_all // 60) }}h {{ (total_all % 60) }}m)</strong>
+    <!-- ── All-time total + Add button ──────────────────────────────────────── -->
+    <div class="total-banner-row">
+      <div class="total-banner">
+        Total study time: <strong id="grandTotal">{{ total_all }} min
+        ({{ (total_all // 60) }}h {{ (total_all % 60) }}m)</strong>
+      </div>
+      <button class="btn-add-session" id="openManualModal">＋ Add Session</button>
     </div>
 
     <!-- ── Sessions by date ──────────────────────────────────────────────── -->
@@ -91,6 +149,10 @@
 
 {% endblock %}
 {% block scripts %}
+  <script>
+    // Pass subjects list to JS for dynamic use
+    window.SUBJECTS = {{ subjects | tojson }};
+  </script>
   <script src="{{ url_for('static', filename='sessions.js') }}"></script>
   <script src="{{ url_for('static', filename='mini-timer.js') }}"></script>
 {% endblock %}
