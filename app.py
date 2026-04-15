@@ -209,6 +209,57 @@ def api_get_session(session_id):
     return jsonify({"ok": True, "session": dict(row)})
 
 
+# ── Sessions: add manual (JSON API) ──────────────────────────────────────────
+@app.route("/api/sessions/manual", methods=["POST"])
+def api_add_manual_session():
+    """
+    POST /api/sessions/manual
+    Body JSON: { subject_id, date, start_time (HH:MM), duration_minutes, notes }
+    Computes end_time = start_time + duration_minutes.
+    """
+    data = request.get_json()
+    subject_id       = data.get("subject_id")
+    date_str         = data.get("date")        # YYYY-MM-DD
+    start_time_str   = data.get("start_time")  # HH:MM
+    duration_minutes = int(data.get("duration_minutes", 0))
+    notes            = data.get("notes", "")
+
+    if not subject_id or not date_str or not start_time_str or duration_minutes < 1:
+        return jsonify({"ok": False, "error": "Missing or invalid fields"}), 400
+
+    try:
+        from datetime import timedelta
+        start_dt = datetime.strptime(f"{date_str} {start_time_str}", "%Y-%m-%d %H:%M")
+        end_dt   = start_dt + timedelta(minutes=duration_minutes)
+        start_fmt = start_dt.strftime("%Y-%m-%d %H:%M:%S")
+        end_fmt   = end_dt.strftime("%Y-%m-%d %H:%M:%S")
+
+        conn = get_db()
+        # Verify subject exists
+        sub = conn.execute("SELECT id FROM subjects WHERE id = ?", (subject_id,)).fetchone()
+        if not sub:
+            conn.close()
+            return jsonify({"ok": False, "error": "Subject not found"}), 404
+
+        cur = conn.execute("""
+            INSERT INTO sessions (subject_id, start_time, end_time, date, duration, notes)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (subject_id, start_fmt, end_fmt, date_str, duration_minutes, notes))
+        conn.commit()
+        new_id = cur.lastrowid
+
+        row = conn.execute("""
+            SELECT s.*, sub.name AS subject_name, sub.color
+            FROM sessions s
+            JOIN subjects sub ON sub.id = s.subject_id
+            WHERE s.id = ?
+        """, (new_id,)).fetchone()
+        conn.close()
+        return jsonify({"ok": True, "session": dict(row)})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
 # ── Sessions: DELETE one ──────────────────────────────────────────────────────
 @app.route("/api/sessions/<int:session_id>", methods=["DELETE"])
 def api_delete_session(session_id):
@@ -223,7 +274,8 @@ def api_delete_session(session_id):
 @app.route("/sessions")
 def sessions_history():
     conn      = get_db()
-    subjects  = conn.execute("SELECT * FROM subjects ORDER BY name").fetchall()
+    # Convert to plain dicts so tojson in the template can serialize them
+    subjects  = [dict(r) for r in conn.execute("SELECT * FROM subjects ORDER BY name").fetchall()]
 
     # Aggregate: total minutes and session count per subject
     stats = conn.execute("""
@@ -256,6 +308,7 @@ def sessions_history():
 
     conn.close()
     return render_template("sessions.html",
+                           subjects=subjects,
                            stats=stats,
                            by_date=dict(by_date),
                            total_all=total_all)
