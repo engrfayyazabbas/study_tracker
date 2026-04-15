@@ -81,6 +81,8 @@ study_tracker.db→ SQLite database file
 
 All extend **`base.html`** which provides:
 - Global top header navigation (sticky, glassmorphism) with mobile dropdown.
+- **`.app-main`** and **`.content-wrapper`** layout flow.
+- Global Deep Space Dark Mode glassmorphism rules.
 - `{% block title %}`, `{% block styles %}`, `{% block content %}`, `{% block scripts %}`
 
 | Template         | Page        | Loads these static files                          |
@@ -106,17 +108,25 @@ All extend **`base.html`** which provides:
 | `dashboard.css` | Dashboard cards, chart containers                            |
 | `mini-timer.css`| Floating mini-timer widget (used on sessions page)           |
 
-### CSS Variables (defined in `style.css` / `timer.css`)
+### CSS Variables (defined in `style.css`)
+Current theme uses "Silicon Deep Space" dark mode style.
 ```css
---bg        /* page background    */
---surface   /* card background    */
---border    /* border color       */
---text      /* primary text       */
---muted     /* secondary text     */
---accent    /* purple #7c6fcd     */
---danger    /* red  #e06060       */
---mono      /* monospace font     */
+--bg           /* Deep black base (#09090b) */
+--surface      /* Glassmorphism card surface */
+--border       /* Translucent crisp border */
+--accent       /* Luminous lime/green */
+--accent2      /* Sharp sky blue */
+--text         /* Primary white/off-white text */
+--text-muted   /* Secondary muted gray text */
+--font-sans    /* Inter font stack */
+--font-mono    /* JetBrains Mono */
 ```
+
+### Bento Grid Framework
+The UI relies heavily on a responsive grid system. To add structured components:
+- Wrap cards in `<div class="bento-wrapper">`
+- Use `<div class="bento-card">` for layout items
+- Append `.col-span-2` to make a component stretch twice as wide
 
 ### JavaScript
 | File            | Purpose                                                                 |

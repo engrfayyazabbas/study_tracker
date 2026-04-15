@@ -2,28 +2,70 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:        #0e0f11;
-  --surface:   #17191e;
-  --border:    #2a2d35;
-  --accent:    #f0e040;       /* sharp yellow */
-  --accent2:   #40c8f0;       /* cyan pop */
-  --text:      #e8eaf0;
-  --muted:     #7a7f90;
-  --danger:    #f05050;
-  --radius:    12px;
-  --font-head: "Syne", sans-serif;
-  --font-mono: "DM Mono", monospace;
+  /* Silicon Deep Space Dark Mode */
+  --bg:          #09090b;      /* Deep black base */
+  --surface:     rgba(255, 255, 255, 0.03); /* Glassmorphism base */
+  --border:      rgba(255, 255, 255, 0.08); /* Crisp translucent border */
+  --border-hover:rgba(255, 255, 255, 0.15);
+  
+  /* Luminous Accents */
+  --accent:      #a3e635; /* Neon lime/green feeling premium */
+  --accent-dim:  rgba(163, 230, 53, 0.15);
+  --accent2:     #38bdf8; /* Sharp sky blue */
+  
+  /* Typography */
+  --text:        #f4f4f5;
+  --text-muted:  #a1a1aa;
+  
+  /* Danger */
+  --danger:      #ef4444;
+  --danger-dim:  rgba(239, 68, 68, 0.1);
+  
+  /* Space & Shape */
+  --radius:      16px;
+  --font-sans:   'Inter', -apple-system, sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
 }
 
 body {
   background: var(--bg);
+  background-image: radial-gradient(circle at 15% 50%, rgba(56, 189, 248, 0.03), transparent 25%),
+                    radial-gradient(circle at 85% 30%, rgba(163, 230, 53, 0.03), transparent 25%);
   color: var(--text);
-  font-family: var(--font-head);
+  font-family: var(--font-sans);
   min-height: 100vh;
-  padding: 2rem 1rem 4rem;
-  background-image:
-    radial-gradient(ellipse 60% 40% at 80% 10%, #1e2a14 0%, transparent 60%),
-    radial-gradient(ellipse 50% 35% at 10% 90%, #0d1e2a 0%, transparent 60%);
+  padding-bottom: 4rem;
+}
+
+/* ── Typography Resets ──────────────────────────────────────────────────────── */
+h1, h2, h3, h4 { font-family: var(--font-sans); font-weight: 600; letter-spacing: -0.02em; }
+p, span, div { letter-spacing: 0.01em; }
+strong { font-weight: 600; color: #fff; }
+
+/* ── Bento Grid Core ────────────────────────────────────────────────────────── */
+.bento-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.bento-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s, box-shadow 0.3s;
+  animation: fadeUp 0.5s ease backwards;
+}
+
+.bento-card:hover {
+  transform: translateY(-2px) scale(1.005);
+  border-color: var(--border-hover);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
 /* ── Layout wrapper ─────────────────────────────────────────────────────────── */
@@ -71,14 +113,20 @@ header {
   color: var(--muted);
 }
 
-/* ── Card ────────────────────────────────────────────────────────────────────── */
+/* ── Legacy Card (mapped to bento styling for existing pages) ────────────── */
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.5rem;
-  animation: fadeUp 0.4s ease both;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+  transition: transform 0.3s, border-color 0.3s;
 }
+
+.card:hover { border-color: var(--border-hover); }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
@@ -101,12 +149,13 @@ header {
 
 label {
   display: block;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-family: var(--font-mono);
-  color: var(--muted);
-  margin-bottom: 0.35rem;
+  color: var(--text-muted);
+  margin-bottom: 0.45rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
+  font-weight: 500;
 }
 
 input, textarea {

@@ -7,10 +7,10 @@
 {% endblock %}
 
 {% block content %}
-  <div class="page">
+  <div class="bento-wrapper">
 
-    <!-- ── Left: Timer ──────────────────────────────────────────────────── -->
-    <section class="timer-panel">
+    <!-- ── Left: Timer (Hero Card) ────────────────────────────────────────── -->
+    <div class="bento-card col-span-2 timer-panel">
 
       <!-- SVG ring progress -->
       <div class="ring-wrap">
@@ -69,12 +69,10 @@
       <!-- Status bar -->
       <div class="status-bar" id="statusBar">Select a subject and press play</div>
 
-    </section>
+    </div>
 
-    <!-- ── Right: Setup + Log ─────────────────────────────────────────────── -->
-    <section class="setup-panel">
-
-      <!-- Subject select -->
+    <!-- ── Right: Setup & Subjects (Side Card) ──────────────────────────── -->
+    <div class="bento-card setup-block-card">
       <div class="setup-block">
         <label for="subjectSelect">Subject</label>
         <select id="subjectSelect">
@@ -93,10 +91,13 @@
         <textarea id="sessionNotes" rows="3" placeholder="What are you studying?"></textarea>
       </div>
 
-      <!-- Daily Goal -->
-      <div class="goal-block">
-        <div class="goal-header">
-          <span class="goal-label">Daily Goal</span>
+      </div>
+    </div>
+
+    <!-- ── Goal Tracking (Side Card) ────────────────────────────────────── -->
+    <div class="bento-card goal-block">
+      <div class="goal-header">
+        <span class="goal-label">Daily Goal</span>
           <span class="streak-badge" id="streakBadge">🔥 {{ streak }} day streak</span>
         </div>
         <div class="goal-set-row">
@@ -106,13 +107,13 @@
         <div class="goal-bar-wrap">
           <div class="goal-bar" id="goalBar"></div>
         </div>
-        <div class="goal-text" id="goalText">—</div>
-      </div>
+      <div class="goal-text" id="goalText">—</div>
+    </div>
 
-      <!-- Today's log -->
-      <div class="log-block">
-        <h3>Today's Sessions</h3>
-        <ul class="session-log" id="sessionLog">
+    <!-- ── Today's Log (Side Card) ──────────────────────────────────────── -->
+    <div class="bento-card log-block">
+      <h3>Today's Sessions</h3>
+      <ul class="session-log" id="sessionLog">
           {% if sessions %}
             {% for s in sessions %}
               <li class="log-item" style="--dot:{{ s['color'] }}" data-id="{{ s['id'] }}">
@@ -134,9 +135,9 @@
         </div>
       </div>
 
-    </section>
+    </div>
 
-  </div><!-- /.page -->
+  </div><!-- /.bento-wrapper -->
 {% endblock %}
 {% block scripts %}
   <script src="{{ url_for('static', filename='timer.js') }}"></script>

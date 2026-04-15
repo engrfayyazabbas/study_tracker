@@ -1,37 +1,19 @@
 /* ── Reset ─────────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --bg:        #0c0c0f;
-  --surface:   #13131a;
-  --border:    #22222e;
-  --text:      #e8e6f0;
-  --muted:     #55546a;
-  --accent:    #c8f060;      /* electric lime */
-  --danger:    #f06060;
-  --radius:    14px;
-  --mono:      "Azeret Mono", monospace;
-  --serif:     "Instrument Serif", Georgia, serif;
+/* ── Timer panel ────────────────────────────────────────────────────────────── */
+.timer-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.25rem;
+  justify-content: center;
 }
 
-body {
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 14px;
-}
-
-/* ── Page layout ────────────────────────────────────────────────────────────── */
-.page {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 0;
-  max-width: 1000px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem;
-  gap: 3rem;
-  align-items: start;
+.setup-block-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 /* ── Timer panel ────────────────────────────────────────────────────────────── */
@@ -235,13 +217,7 @@ body {
 .status-bar.warning { color: var(--danger); }
 
 /* ── Setup panel ─────────────────────────────────────────────────────────────── */
-.setup-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.setup-block { display: flex; flex-direction: column; gap: 0.4rem; }
+.setup-block { display: flex; flex-direction: column; gap: 0.6rem; }
 
 label {
   font-size: 0.68rem;
@@ -273,8 +249,6 @@ select option { background: var(--surface); }
 
 /* ── Session log ─────────────────────────────────────────────────────────────── */
 .log-block {
-  border-top: 1px solid var(--border);
-  padding-top: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -418,13 +392,9 @@ kbd {
 
 /* ── Daily Goal block ────────────────────────────────────────────────────────── */
 .goal-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.9rem 1.1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
+  gap: 0.75rem;
 }
 
 .goal-header {
@@ -503,10 +473,4 @@ kbd {
 .goal-text.goal-done { color: var(--accent); font-weight: 700; }
 
 /* ── Responsive ──────────────────────────────────────────────────────────────── */
-@media (max-width: 700px) {
-  .page {
-    grid-template-columns: 1fr;
-    padding: 1.5rem 1rem;
-    gap: 2rem;
-  }
-}
+/* Bento grid naturally scales, no custom page queries needed here */

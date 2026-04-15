@@ -8,10 +8,10 @@
 {% endblock %}
 
 {% block content %}
-  <div class="subjects-layout">
+  <div class="bento-wrapper">
 
     <!-- ── Sidebar: Add / Edit form ───────────────────────────────────────── -->
-    <aside class="subjects-sidebar">
+    <div class="bento-card subjects-sidebar">
       <div class="brand">Study<br/>Tracker</div>
 
       <form id="subjectForm" action="/subjects/add" method="POST">
@@ -46,10 +46,10 @@
         <span class="pill">SQLite</span>
         <span class="pill">Python</span>
       </div>
-    </aside>
+    </div>
 
     <!-- ── Main: Subject list ─────────────────────────────────────────────── -->
-    <main class="main">
+    <div class="bento-card main col-span-2">
       <header class="main-header">
         <h1>Subjects</h1>
         <span class="count">{{ subjects|length }} total</span>
@@ -100,9 +100,9 @@
           <p>No subjects yet.<br/>Add your first one →</p>
         </div>
       {% endif %}
-    </main>
+    </div>
 
-  </div><!-- /.subjects-layout -->
+  </div><!-- /.bento-wrapper -->
 
   <!-- Hidden edit-proxy form (posts to /subjects/<id>/edit) -->
   <form id="editProxy" method="POST" style="display:none">

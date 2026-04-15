@@ -64,10 +64,10 @@
     </div>
   </div>
 
-  <div class="sessions-page">
+  <div class="bento-wrapper">
 
     <!-- ── Stats strip ──────────────────────────────────────────────────── -->
-    <section class="stats-strip">
+    <section class="bento-card stats-strip col-span-2">
       {% for s in stats %}
         <div class="stat-card" style="--accent: {{ s['color'] }}">
           <span class="stat-dot"></span>
@@ -96,7 +96,7 @@
     </div>
 
     <!-- ── Sessions by date ──────────────────────────────────────────────── -->
-    <section class="history">
+    <section class="bento-card history col-span-2">
       {% if by_date %}
         {% for day, day_sessions in by_date.items() %}
           <div class="day-group">
@@ -134,10 +134,10 @@
       {% endif %}
     </section>
 
-  </div>
+  </div><!-- /.bento-wrapper -->
 
   <!-- API reference box -->
-  <div class="api-box">
+  <div class="bento-card api-box col-span-2">
     <h4>JSON API</h4>
     <code>GET  /api/sessions</code>
     <code>GET  /api/sessions?subject_id=1</code>
