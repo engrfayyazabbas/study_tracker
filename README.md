@@ -46,8 +46,8 @@
 | **Database** | SQLite 3 |
 | **Frontend** | HTML5, CSS3, Vanilla JavaScript |
 | **Charts** | Chart.js v4.4.7 (CDN) |
-| **Fonts** | Google Fonts (Azeret Mono, Instrument Serif, IBM Plex Mono, Fraunces) |
-| **Design** | Dark theme, monospaced typography, electric lime + cyan accent colors |
+| **Fonts** | Google Fonts (Inter, JetBrains Mono) |
+| **Design** | Deep Space Dark theme (#09090b), glassmorphism, responsive Bento Grid, luminous accents |
 
 ---
 
@@ -179,11 +179,11 @@ python app.py
 
 ### Design Decisions
 
-- **Dark theme throughout** — Background `#0c0c0f`, surface `#13131a`, electric lime `#c8f060` accent
-- **Monospaced typography** — Azeret Mono for data-heavy UI, Instrument Serif for brand/nav accents
-- **No build tools** — Pure HTML/CSS/JS with Jinja2 templating; Chart.js loaded via CDN
-- **Server-side rendering + client-side charts** — Pages are rendered by Flask/Jinja2; charts fetch data from a dedicated JSON API for separation of concerns
-- **Staggered animations** — Card entrance animations with incremental delays for a polished feel
+- **Premium Modern Aesthetic** — Rebuilt the layout using a deeply immersive **Deep Space Dark Theme** (`#09090b` baseline) enhanced by soft glassmorphism components (`rgba(255,255,255,0.03)` with `backdrop-filter: blur(16px)`).
+- **Global Bento Grid Structure** — All pages (Dashboard, Timer, Sessions, Subjects) adhere to a clean, scalable Bento grid wrapper that naturally adapts to any screen size.
+- **Top-tier Typography** — Completely overhauled typing stack utilizing `Inter` for general UI legibility and `JetBrains Mono` for precise numbers and technical labels.
+- **Micro-animations & Interactions** — Implemented smooth hover scaling effects (`cubic-bezier(0.2, 0.8, 0.2, 1)`), staggered fades upon entrance, and modern dynamic coloring on focus.
+- **No build tools** — Pure HTML/CSS/JS with Jinja2 templating; Chart.js loaded via CDN. Server-side rendering handles the layout while client-side JS gracefully pulls data.
 
 ---
 
