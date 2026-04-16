@@ -1,11 +1,22 @@
 /* sessions.css – extends timer.css variables */
 
+.col-span-2 {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .col-span-2 {
+    grid-column: span 1;
+  }
+}
+
 /* ── Stats strip ─────────────────────────────────────────────────────────────── */
 .stats-strip {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
 }
+
 .stat-card {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border);
@@ -18,15 +29,27 @@
 }
 
 .stat-dot {
-  width: 10px; height: 10px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--accent, #888);
   flex-shrink: 0;
 }
 
-.stat-info { display: flex; flex-direction: column; gap: 0.15rem; }
-.stat-info strong { font-size: 0.88rem; }
-.stat-info span   { font-size: 0.7rem; color: var(--muted); }
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.stat-info strong {
+  font-size: 0.88rem;
+}
+
+.stat-info span {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
 
 .stat-bar-wrap {
   height: 4px;
@@ -43,8 +66,15 @@
   transition: width 0.6s ease;
 }
 
-.no-stats { color: var(--muted); font-size: 0.85rem; }
-.no-stats a { color: var(--accent); text-decoration: none; }
+.no-stats {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.no-stats a {
+  color: var(--accent);
+  text-decoration: none;
+}
 
 /* ── Total banner ────────────────────────────────────────────────────────────── */
 .total-banner {
@@ -53,12 +83,23 @@
   letter-spacing: 0.06em;
   text-align: right;
 }
-.total-banner strong { color: var(--accent); }
+
+.total-banner strong {
+  color: var(--accent);
+}
 
 /* ── History ─────────────────────────────────────────────────────────────────── */
-.history { display: flex; flex-direction: column; gap: 1.5rem; }
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
-.day-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.day-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
 .day-header {
   display: flex;
@@ -82,7 +123,12 @@
 }
 
 /* Session list */
-.session-list { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+.session-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
 
 .session-item {
   display: grid;
@@ -97,15 +143,21 @@
   animation: popIn 0.25s ease both;
 }
 
-.session-item:hover { border-color: #333; }
+.session-item:hover {
+  border-color: #333;
+}
 
 .s-dot {
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--dot, #888);
 }
 
-.s-subject { font-size: 0.85rem; font-weight: 400; }
+.s-subject {
+  font-size: 0.85rem;
+  font-weight: 400;
+}
 
 .s-time {
   font-size: 0.72rem;
@@ -120,7 +172,10 @@
   white-space: nowrap;
 }
 
-.s-notes { font-size: 0.8rem; cursor: default; }
+.s-notes {
+  font-size: 0.8rem;
+  cursor: default;
+}
 
 .s-delete {
   background: none;
@@ -133,7 +188,11 @@
   transition: color 0.15s, background 0.15s;
   line-height: 1;
 }
-.s-delete:hover { color: var(--danger); background: #2a1313; }
+
+.s-delete:hover {
+  color: var(--danger);
+  background: #2a1313;
+}
 
 /* Fade out on delete */
 .session-item.removing {
@@ -148,7 +207,11 @@
   padding: 3rem;
   color: var(--muted);
 }
-.empty-history a { color: var(--accent); text-decoration: none; }
+
+.empty-history a {
+  color: var(--accent);
+  text-decoration: none;
+}
 
 /* ── API reference box ───────────────────────────────────────────────────────── */
 .api-box {
@@ -208,12 +271,16 @@
   white-space: nowrap;
   box-shadow: 0 2px 10px rgba(124, 111, 205, 0.35);
 }
+
 .btn-add-session:hover {
   background: #9585e0;
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgba(124, 111, 205, 0.5);
 }
-.btn-add-session:active { transform: translateY(0); }
+
+.btn-add-session:active {
+  transform: translateY(0);
+}
 
 /* ── Modal backdrop ──────────────────────────────────────────────────────────── */
 .modal-backdrop {
@@ -230,6 +297,7 @@
   pointer-events: none;
   transition: opacity 0.22s ease;
 }
+
 .modal-backdrop.is-open {
   opacity: 1;
   pointer-events: auto;
@@ -246,6 +314,7 @@
   transform: translateY(18px) scale(0.97);
   transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 .modal-backdrop.is-open .modal-card {
   transform: translateY(0) scale(1);
 }
@@ -258,12 +327,14 @@
   padding: 1.25rem 1.5rem 1rem;
   border-bottom: 1px solid var(--border, #2a2a3e);
 }
+
 .modal-header h2 {
   font-size: 1rem;
   font-weight: 700;
   margin: 0;
   color: var(--text, #e2e2f0);
 }
+
 .modal-close {
   background: none;
   border: none;
@@ -275,7 +346,11 @@
   line-height: 1;
   transition: color 0.15s, background 0.15s;
 }
-.modal-close:hover { color: var(--danger, #e06060); background: rgba(224,96,96,0.1); }
+
+.modal-close:hover {
+  color: var(--danger, #e06060);
+  background: rgba(224, 96, 96, 0.1);
+}
 
 /* ── Modal body (form) ───────────────────────────────────────────────────────── */
 .modal-body {
@@ -290,6 +365,7 @@
   flex-direction: column;
   gap: 0.35rem;
 }
+
 .field-group label {
   font-size: 0.72rem;
   font-weight: 600;
@@ -297,11 +373,13 @@
   text-transform: uppercase;
   color: var(--muted, #888);
 }
+
 .field-group .optional {
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
 }
+
 .field-group input,
 .field-group select {
   width: 100%;
@@ -316,12 +394,16 @@
   box-sizing: border-box;
   font-family: inherit;
 }
+
 .field-group input:focus,
 .field-group select:focus {
   border-color: var(--accent, #7c6fcd);
   box-shadow: 0 0 0 3px rgba(124, 111, 205, 0.18);
 }
-.field-group select option { background: #1a1a2e; }
+
+.field-group select option {
+  background: #1a1a2e;
+}
 
 /* ── Error paragraph ─────────────────────────────────────────────────────────── */
 .ms-error {
@@ -353,8 +435,16 @@
   cursor: pointer;
   transition: background 0.18s, transform 0.12s;
 }
-.btn-primary:hover:not(:disabled) { background: #9585e0; transform: translateY(-1px); }
-.btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.btn-primary:hover:not(:disabled) {
+  background: #9585e0;
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 
 .btn-ghost {
   padding: 0.5rem 1rem;
@@ -366,4 +456,8 @@
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
 }
-.btn-ghost:hover { color: var(--text, #e2e2f0); border-color: #555; }
+
+.btn-ghost:hover {
+  color: var(--text, #e2e2f0);
+  border-color: #555;
+}

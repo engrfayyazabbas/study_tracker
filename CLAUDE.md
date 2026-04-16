@@ -127,6 +127,7 @@ The UI relies heavily on a responsive grid system. To add structured components:
 - Wrap cards in `<div class="bento-wrapper">`
 - Use `<div class="bento-card">` for layout items
 - Append `.col-span-2` to make a component stretch twice as wide
+- **Gotcha:** The `.col-span-2` class must be defined in the page-specific CSS (e.g., `sessions.css`, `dashboard.css`). If containers look unequal, ensure `.col-span-2 { grid-column: span 2; }` is included.
 
 ### JavaScript
 | File            | Purpose                                                                 |
