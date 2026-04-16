@@ -129,6 +129,16 @@ The UI relies heavily on a responsive grid system. To add structured components:
 - Append `.col-span-2` to make a component stretch twice as wide
 - **Gotcha:** The `.col-span-2` class must be defined in the page-specific CSS (e.g., `sessions.css`, `dashboard.css`). If containers look unequal, ensure `.col-span-2 { grid-column: span 2; }` is included.
 
+### Dashboard Layout Rules
+- The `week-section` (Last 7 Days bar chart) uses `.col-span-2` to span the full bento grid width.
+- The three chart cards (`chartDailyCard`, `chartWeeklyCard`, `chartSubjectsCard`) are **independent siblings** inside `.bento-wrapper` — do NOT nest them inside `week-section`.
+- `week-section` uses `display: flex; flex-direction: column` to stack its title and bar chart vertically.
+- `chart-card--wide` spans 2 columns (the Subject-wise chart).
+
+### Select / Dropdown Styling
+- All `<select>` and `<option>` elements use `background: var(--bg)` to match the page background.
+- Avoid `var(--surface)` for `option` backgrounds — it is a translucent rgba value that browsers cannot render in native dropdown menus, causing a white fallback.
+
 ### JavaScript
 | File            | Purpose                                                                 |
 |-----------------|-------------------------------------------------------------------------|
