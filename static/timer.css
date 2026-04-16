@@ -244,8 +244,7 @@ select, textarea {
 select:focus, textarea:focus { border-color: var(--accent); }
 textarea { resize: vertical; }
 
-/* Subject color indicator on select */
-select option { background: var(--surface); }
+select option { background: var(--bg); } /* Match the page background variable */
 
 /* ── Session log ─────────────────────────────────────────────────────────────── */
 .log-block {
